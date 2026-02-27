@@ -4,6 +4,11 @@ CLI for FortiClient VPN on macOS with profile-level control (for example `prod` 
 
 It uses FortiClient's native bridge API (`guimessenger_jyp.node`) so you can list and connect specific FortiClient connections, not just the single macOS network service.
 
+## Prerequisites
+
+- Go must be installed (`go` command available in your shell).
+- Install guide: https://go.dev/doc/install
+
 ## Build
 
 ```bash
