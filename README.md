@@ -8,6 +8,7 @@ It uses FortiClient's native bridge API (`guimessenger_jyp.node`) so you can lis
 
 - Go must be installed (`go` command available in your shell).
 - Install guide: https://go.dev/doc/install
+- Node.js must be installed (`node` command available in your shell).
 
 ## Build
 

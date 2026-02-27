@@ -74,7 +74,7 @@ func run(args []string) int {
 }
 
 func printUsage() {
-	fmt.Println(`fortivpn: FortiClient VPN helper CLI for macOS
+	fmt.Print(`fortivpn: FortiClient VPN helper CLI for macOS
 
 Usage:
   fortivpn connections [--json]
@@ -284,6 +284,9 @@ func runWatch(args []string) int {
 	}
 
 	interval := seconds(*intervalSec)
+	if interval <= 0 {
+		interval = 1 * time.Second
+	}
 	timeout := seconds(*timeoutSec)
 	fmt.Printf("Watching %q. interval=%s reconnect-timeout=%s\n", target.ConnectionName, interval, timeout)
 
@@ -379,7 +382,11 @@ func waitForTunnelState(expectedConnection string, shouldBeConnected bool, timeo
 
 		if shouldBeConnected {
 			if last.Connected() {
-				if expectedConnection == "" || strings.EqualFold(last.CurrentConnection(), expectedConnection) || last.CurrentConnection() == "" {
+				if expectedConnection == "" {
+					return last, nil
+				}
+				current := strings.TrimSpace(last.CurrentConnection())
+				if current != "" && strings.EqualFold(current, expectedConnection) {
 					return last, nil
 				}
 			}
