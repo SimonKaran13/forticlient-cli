@@ -44,6 +44,6 @@ go build -o fortivpn .
 ## Notes
 
 - `connect` is idempotent: if already connected to the selected connection, it exits successfully without reconnecting.
-- If already connected to a different connection, `connect --connection ...` asks FortiClient to switch directly (it does not force a pre-disconnect).
+- If already connected to a different connection, `connect --connection ...` disconnects first, then connects to the selected profile.
 - `connect` will auto-start the FortiClient app if it is not running.
 - If FortiClient requires MFA or interactive SAML authentication, connect may still require user interaction.

@@ -190,6 +190,23 @@ func runConnect(args []string) int {
 		status := buildStatus(currentState, target.ConnectionName)
 		return printConnectResult(status, *asJSON)
 	}
+	if currentState.Connected() && !strings.EqualFold(currentState.CurrentConnection(), target.ConnectionName) {
+		disconnectPayload := map[string]string{
+			"connection_name": currentState.CurrentConnection(),
+			"connection_type": currentState.ConnectionType(),
+		}
+		if _, err := runBridge("disconnect", disconnectPayload); err != nil {
+			return fail(fmt.Errorf("failed to disconnect %q before switching to %q: %w", currentState.CurrentConnection(), target.ConnectionName, err))
+		}
+
+		afterDisconnect, err := waitForTunnelState("", false, seconds(*timeoutSec), seconds(*intervalSec))
+		if err != nil {
+			return fail(err)
+		}
+		if afterDisconnect.Connected() {
+			return fail(fmt.Errorf("failed to disconnect %q before switching to %q", currentState.CurrentConnection(), target.ConnectionName))
+		}
+	}
 
 	payload := map[string]string{
 		"connection_name": target.ConnectionName,
